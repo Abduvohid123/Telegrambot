@@ -1,0 +1,13 @@
+{
+    "name": "aabduvohid/quron_bot",
+    "authors": [
+        {
+            "name": "Abduvohid123",
+            "email": "abduvohid.mirzamahmudov@gmal.com"
+        }
+    ],
+    "require": {
+        "telegram-bot/api": "^2.3",
+      "ext-mysqli": "*"
+    }
+}
