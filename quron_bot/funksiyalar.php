@@ -21,6 +21,7 @@ function massiv($url, $cols, $id)
 function suralar($cols, $mode)
 {
 
+    $next='';
     $massiv = [];
     $data = json_decode(file_get_contents('https://api.alquran.cloud/v1/meta'));
     $arr = $data->data->surahs->references;
@@ -28,15 +29,16 @@ function suralar($cols, $mode)
 
         array_splice($arr, 96);
     } else {
+        $next="_next";
         array_splice($arr, 0, 96);
 
     }
-    var_dump($arr);
+
     $bolindi = array_chunk($arr, $cols);
     foreach ($bolindi as $bolim) {
         $row = [];
         for ($i = 0; $i < $cols; $i++) {
-            $col = ['text' => $bolim[$i]->englishName, 'callback_data' => 'sura' . '_' . $bolim[$i]->number];
+            $col = ['text' => $bolim[$i]->englishName, 'callback_data' => "sura$next" . '_' . $bolim[$i]->number];
             $row[] = $col;
         }
         $massiv[] = $row;

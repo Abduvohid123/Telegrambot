@@ -8,6 +8,7 @@
     ],
     "require": {
         "telegram-bot/api": "^2.3",
-      "ext-mysqli": "*"
+      "ext-mysqli": "*",
+      "ext-json": "*"
     }
 }
