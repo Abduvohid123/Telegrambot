@@ -1,11 +1,7 @@
 <?php
 
 
-function str_bormi($needle, $str)
-{
-
-}
-
+$connect =mysqli_connect('localhost','user','password','quran');
 function massiv($url, $cols, $id)
 {
     $massiv = [];
@@ -18,13 +14,19 @@ function massiv($url, $cols, $id)
 }
 
 
+function query($sql){
+    return $GLOBALS['connect']->query($sql);
+}
 function suralar($cols, $mode)
 {
 
     $next='';
     $massiv = [];
-    $data = json_decode(file_get_contents('https://api.alquran.cloud/v1/meta'));
-    $arr = $data->data->surahs->references;
+    $data = $GLOBALS['connect']->query('select name from suralar')->fetch_all();
+    $arr = [];
+    foreach ($data as $datum) {
+        $arr[]=$datum[0];
+    }
     if ($mode == 'base') {
 
         array_splice($arr, 96);
@@ -34,18 +36,24 @@ function suralar($cols, $mode)
 
     }
 
+    $count=$mode=='base'?0:96;
     $bolindi = array_chunk($arr, $cols);
+
+
+
     foreach ($bolindi as $bolim) {
         $row = [];
         for ($i = 0; $i < $cols; $i++) {
-            $col = ['text' => $bolim[$i]->englishName, 'callback_data' => "sura$next" . '_' . $bolim[$i]->number];
+            $col = ['text' => $bolim[$i], 'callback_data' => "sura$next" . '_' . ($count+1)];
             $row[] = $col;
+            $count++;
         }
         $massiv[] = $row;
+
     }
     if ($mode == 'base') {
 
-        $massiv[] = [['text' => '🏠️  Bosh menu', 'callback_data' => 'back_menu'], ['text' => 'Keyingi   ➡', 'callback_data' => 'next']];
+        $massiv[] = [['text' => '🏠  Bosh menu', 'callback_data' => 'back_menu'], ['text' => 'Keyingi   ➡️', 'callback_data' => 'next']];
     } else {
         $massiv[] = [['text' => '⬅️  orqaga', 'callback_data' => 'read_quran'], ['text' => 'Bosh menu  🏠', 'callback_data' => 'back_menu']];
 
@@ -67,3 +75,6 @@ function bosh_menu($bot, $chatId, $firstname, $messageId)
 
 
 }
+
+
+
